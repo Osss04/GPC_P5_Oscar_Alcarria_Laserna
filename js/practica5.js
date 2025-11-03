@@ -113,7 +113,8 @@ function loadScene() {
 
     let materialMetal = new THREE.MeshLambertMaterial({
         map: textureMetal,
-        side: THREE.DoubleSide
+        side: THREE.DoubleSide,
+        wireframe: robotParams.wireframe
     });
     //piso
     let textureSuelo = new THREE.TextureLoader().load('images/pisometalico_1024.jpg');
@@ -126,9 +127,12 @@ function loadScene() {
 
     let materialWood = new THREE.MeshLambertMaterial({
         map: textureWood,
-        side: THREE.DoubleSide
+        side: THREE.DoubleSide,
+        wireframe: robotParams.wireframe
     });
-
+    //fix3: añadir materailes de madera y metal a updatewireframe
+    materials.metal = materialMetal;
+    materials.madera = materialWood;
     suelo.rotation.x = -Math.PI / 2;
     suelo.receiveShadow = true;
     scene.add(suelo);
@@ -232,45 +236,58 @@ function loadScene() {
       let grosor = 4;
       let grosor2 = 2;
 
+      let difAltura = Math.abs(alto - alto2);
+
       const vertices = new Float32Array([
-        //rectángulo
-        0,  0,  0,
-        grosor, 0,  0,
-        0,  0,  ancho,
-        grosor, 0,  ancho,
+        0, 0, 0,
+        grosor, 0, 0,
+        0, 0, ancho,
+        grosor, 0, ancho,
         0, -alto, ancho,
         0, -alto, 0,
         grosor, -alto, 0,
         grosor, -alto, ancho,
-
-        //trapecio
-        0, -alto2 - (Math.abs(alto - alto2) / 2), longitudPieza,
-        grosor2, -alto2 - (Math.abs(alto - alto2) / 2), longitudPieza,
-        0, -(Math.abs(alto - alto2) / 2), longitudPieza,
-        grosor2, -(Math.abs(alto - alto2) / 2), longitudPieza
+        0, -alto2 - difAltura / 2, longitudPieza,
+        grosor2, -alto2 - difAltura / 2, longitudPieza,
+        0, -difAltura / 2, longitudPieza,
+        grosor2, -difAltura / 2, longitudPieza
       ]);
 
       const indices = [
-        0, 2, 1,  1, 2, 3,
-        0, 5, 2,  5, 4, 2,
-        0, 5, 6,  0, 6, 1,
-        1, 6, 3,  6, 7, 3,
-        3, 2, 4,  3, 4, 7,
-        3,10,11,  2,10,3,
-        2, 4,10,  4, 8,10,
-        10,8,11,  11,8,9,
-        3,11,7,   7,9,11
+        0, 2, 1,
+        1, 2, 3,
+        0, 5, 2,
+        5, 4, 2,
+        0, 5, 6,
+        0, 6, 1,
+        1, 6, 3,
+        6, 7, 3,
+        3, 2, 4,
+        3, 4, 7,
+        3, 10, 11,
+        2, 10, 3,
+        2, 4, 10,
+        4, 8, 10,
+        10, 8, 11,
+        11, 8, 9,
+        3, 11, 7,
+        7, 9, 11
       ];
 
-      let geom = new THREE.BufferGeometry();
-      geom.setAttribute("position", new THREE.BufferAttribute(vertices, 3));
-      geom.setIndex(indices);
-      geom.computeVertexNormals();
+      const geometry = new THREE.BufferGeometry();
+      geometry.setIndex(indices);
+      geometry.setAttribute('position', new THREE.BufferAttribute(vertices, 3));
+      geometry.computeVertexNormals();
 
-      let pinza = new THREE.Mesh(geom, material);
-      pinza.position.x = alto / 2; //misma referencia
+      //fix1: normalizar
+      geometry.normalizeNormals();
+      material.side = THREE.DoubleSide;
+
+      const pinza = new THREE.Mesh(geometry, material);
+      pinza.position.x = alto / 2;
 
       return pinza;
+
     }
 
     // Pinzas
@@ -361,7 +378,8 @@ function updateWireframe() {
 function updateRobot() {
     robot.position.set(robotParams.posX, 0, robotParams.posZ);
     base.rotation.y = THREE.MathUtils.degToRad(robotParams.giroBase);
-    eje.rotation.y = THREE.MathUtils.degToRad(robotParams.giroBrazo);
+    //fix2: rotar sobre el eje z
+    brazo.rotation.z = THREE.MathUtils.degToRad(robotParams.giroBrazo);
     antebrazo.rotation.y = THREE.MathUtils.degToRad(robotParams.giroAntebrazoY);
     antebrazo.rotation.z = THREE.MathUtils.degToRad(robotParams.giroAntebrazoZ);
     mano.rotation.x = THREE.MathUtils.degToRad(robotParams.rotacionPinza);
