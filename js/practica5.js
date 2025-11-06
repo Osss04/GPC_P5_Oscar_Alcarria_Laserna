@@ -158,8 +158,7 @@ function loadScene() {
         new THREE.CylinderGeometry(20, 20, 18, 32),
         materialMetal
     );
-    eje.rotation.x = -Math.PI / 2;
-    eje.rotation.z = -Math.PI / 2;
+    eje.rotation.z = Math.PI / 2;
     eje.castShadow = true;
     brazo.add(eje);
 
@@ -385,7 +384,7 @@ function updateRobot() {
     robot.position.set(robotParams.posX, 0, robotParams.posZ);
     base.rotation.y = THREE.MathUtils.degToRad(robotParams.giroBase);
     //fix2: rotar sobre el eje z
-    brazo.rotation.z = THREE.MathUtils.degToRad(robotParams.giroBrazo);
+    brazo.rotation.x = THREE.MathUtils.degToRad(robotParams.giroBrazo);
     antebrazo.rotation.y = THREE.MathUtils.degToRad(robotParams.giroAntebrazoY);
     antebrazo.rotation.z = THREE.MathUtils.degToRad(robotParams.giroAntebrazoZ);
     mano.rotation.x = THREE.MathUtils.degToRad(robotParams.rotacionPinza);
