@@ -228,66 +228,72 @@ function loadScene() {
 
 
     function crearPinza(material) {
-      //medidas de la pinza
-      let longitudPieza = 38;
-      let alto = 20;
-      let alto2 = 15;
-      let ancho = 19;
-      let grosor = 4;
-      let grosor2 = 2;
 
-      let difAltura = Math.abs(alto - alto2);
+        let longitudPieza = 38;
+        let alto = 20;
+        let alto2 = 15;
+        let ancho = 19;
+        let grosor = 4;
+        let grosor2 = 2;
 
-      const vertices = new Float32Array([
-        0, 0, 0,
-        grosor, 0, 0,
-        0, 0, ancho,
-        grosor, 0, ancho,
-        0, -alto, ancho,
-        0, -alto, 0,
-        grosor, -alto, 0,
-        grosor, -alto, ancho,
-        0, -alto2 - difAltura / 2, longitudPieza,
-        grosor2, -alto2 - difAltura / 2, longitudPieza,
-        0, -difAltura / 2, longitudPieza,
-        grosor2, -difAltura / 2, longitudPieza
-      ]);
+        let difAltura = Math.abs(alto - alto2);
 
-      const indices = [
-        0, 2, 1,
-        1, 2, 3,
-        0, 5, 2,
-        5, 4, 2,
-        0, 5, 6,
-        0, 6, 1,
-        1, 6, 3,
-        6, 7, 3,
-        3, 2, 4,
-        3, 4, 7,
-        3, 10, 11,
-        2, 10, 3,
-        2, 4, 10,
-        4, 8, 10,
-        10, 8, 11,
-        11, 8, 9,
-        3, 11, 7,
-        7, 9, 11
-      ];
+        // Vértices (mismo orden que en THREE.Geometry)
+        const vertices = new Float32Array([
+            0, 0, 0,
+            grosor, 0, 0,
+            0, 0, ancho,
+            grosor, 0, ancho,
+            0, -alto, ancho,
+            0, -alto, 0,
+            grosor, -alto, 0,
+            grosor, -alto, ancho,
+            0, -alto2 - difAltura / 2, longitudPieza,
+            grosor2, -alto2 - difAltura / 2, longitudPieza,
+            0, -difAltura / 2, longitudPieza,
+            grosor2, -difAltura / 2, longitudPieza
+        ]);
 
-      const geometry = new THREE.BufferGeometry();
-      geometry.setIndex(indices);
-      geometry.setAttribute('position', new THREE.BufferAttribute(vertices, 3));
-      geometry.computeVertexNormals();
+        // Índices (caras) igual que Face3 de tu función original
+        const indices = [
+            0, 2, 1,
+            1, 2, 3,
+            0, 5, 2,
+            5, 4, 2,
+            0, 5, 6,
+            5, 6, 4,
+            4, 6, 7,
+            0, 6, 1,
+            1, 6, 3,
+            6, 7, 3,
+            3, 2, 4,
+            3, 4, 7,
+            3, 10, 11,
+            2, 10, 3,
+            2, 4, 10,
+            4, 8, 10,
+            4, 7, 8,
+            7, 9, 8,
+            10, 8, 11,
+            11, 8, 9,
+            3, 11, 7,
+            7, 9, 11
+        ];
 
-      //fix1: normalizar
-      geometry.normalizeNormals();
-      material.side = THREE.DoubleSide;
+        const geometry = new THREE.BufferGeometry();
+        geometry.setIndex(indices);
+        geometry.setAttribute('position', new THREE.BufferAttribute(vertices, 3));
+        geometry.computeVertexNormals();
 
-      const pinza = new THREE.Mesh(geometry, material);
-      pinza.position.x = alto / 2;
+        material.side = THREE.DoubleSide;
 
-      return pinza;
+        const pinza = new THREE.Mesh(geometry, material);
 
+        pinza.position.x = alto / 2;
+        pinza.castShadow = true;
+        pinza.receiveShadow = true;
+
+        return pinza;
     }
 
     // Pinzas
