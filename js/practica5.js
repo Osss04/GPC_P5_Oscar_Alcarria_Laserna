@@ -237,7 +237,7 @@ function loadScene() {
 
         let difAltura = Math.abs(alto - alto2);
 
-        // Vértices (mismo orden que en THREE.Geometry)
+        //vertices
         const vertices = new Float32Array([
             0, 0, 0,
             grosor, 0, 0,
@@ -253,7 +253,7 @@ function loadScene() {
             grosor2, -difAltura / 2, longitudPieza
         ]);
 
-        // Índices (caras) igual que Face3 de tu función original
+        //caras
         const indices = [
             0, 2, 1,
             1, 2, 3,
@@ -295,7 +295,7 @@ function loadScene() {
         return pinza;
     }
 
-    // Pinzas
+    //pinzas
     pinzaR = crearPinza(materials.pinza);
     pinzaR.rotation.z = -Math.PI / 2;
     pinzaR.position.y = 13;
