@@ -383,7 +383,7 @@ function updateWireframe() {
 function updateRobot() {
     robot.position.set(robotParams.posX, 0, robotParams.posZ);
     base.rotation.y = THREE.MathUtils.degToRad(robotParams.giroBase);
-    //fix2: rotar sobre el eje z
+    //fix2: rotar sobre el eje x
     brazo.rotation.x = THREE.MathUtils.degToRad(robotParams.giroBrazo);
     antebrazo.rotation.y = THREE.MathUtils.degToRad(robotParams.giroAntebrazoY);
     antebrazo.rotation.z = THREE.MathUtils.degToRad(robotParams.giroAntebrazoZ);
